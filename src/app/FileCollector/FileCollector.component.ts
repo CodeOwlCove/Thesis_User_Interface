@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {FileCollectorService} from "./FileCollector.service";
+import {FileTablePresenterComponent} from "../FileTablePresenter/FileTablePresenter.component";
 
 @Component({
     selector: 'FileCollector',
@@ -11,9 +12,11 @@ import {FileCollectorService} from "./FileCollector.service";
 export class FileCollectorComponent {
     title: string = 'FileCollector';
     _fileCollectorService: FileCollectorService;
+    _fileTablePresenterComponent: FileTablePresenterComponent;
 
-    constructor(fileCollectorService: FileCollectorService) {
+    constructor(fileCollectorService: FileCollectorService, FileTablePresenterComponent: FileTablePresenterComponent) {
         this._fileCollectorService = fileCollectorService;
+        this._fileTablePresenterComponent = FileTablePresenterComponent;
         this.title = fileCollectorService.collectFiles();
     }
 
@@ -26,7 +29,8 @@ export class FileCollectorComponent {
     }
 
     button3Click() {
-        alert("button3Click");
+        console.log("button3Click");
+        this._fileTablePresenterComponent.createTestTable();
     }
 
     downloadFile() {
@@ -52,5 +56,9 @@ export class FileCollectorComponent {
 
             console.log(error);
         });
+    }
+
+    createTestTable(){
+
     }
 }
