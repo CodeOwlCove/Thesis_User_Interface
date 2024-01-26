@@ -33,13 +33,7 @@ import {
 export class FileTablePresenterComponent {
     dataSource: any;
     displayedColumns: any;
-
     constructor() {
-        this.createTestTable();
-    }
-
-    public createTestTable(): void {
-        // Your data array here
         this.dataSource = [
             {name: 'John', age: 25, city: 'New York'},
             {name: 'Alice', age: 30, city: 'San Francisco'},
@@ -50,8 +44,16 @@ export class FileTablePresenterComponent {
         ];
 
         this.displayedColumns = ['name', 'age', 'city'];
+    }
 
-        console.log(this.dataSource);
-        console.log(this.displayedColumns);
+    public updateTable(): void {
+        this.dataSource = [
+            {name: 'John2', age: 225, city: '2 New York'},
+            {name: 'Alice2', age: 230, city: '2 San Francisco'},
+            {name: 'Hans2', age: 235, city: '2 Washington'},
+            {name: 'Peter2', age: 240, city: '2 Rio de Janeiro'},
+            {name: 'Walter2', age: 245, city: '2 Berlin'},
+            // Add more data as needed
+        ];
     }
 }

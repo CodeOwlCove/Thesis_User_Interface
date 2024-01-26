@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ComponentRef, ViewChild, ViewContainerRef} from '@angular/core';
 import {FileCollectorService} from "./FileCollector.service";
 import {FileTablePresenterComponent} from "../FileTablePresenter/FileTablePresenter.component";
 
@@ -14,10 +14,22 @@ export class FileCollectorComponent {
     _fileCollectorService: FileCollectorService;
     _fileTablePresenterComponent: FileTablePresenterComponent;
 
+    @ViewChild("viewContainerRef", { read: ViewContainerRef }) vcr!: ViewContainerRef;
+    ref!: ComponentRef<FileTablePresenterComponent>
+    refList: ComponentRef<FileTablePresenterComponent>[] = []
+
     constructor(fileCollectorService: FileCollectorService, FileTablePresenterComponent: FileTablePresenterComponent) {
         this._fileCollectorService = fileCollectorService;
         this._fileTablePresenterComponent = FileTablePresenterComponent;
         this.title = fileCollectorService.collectFiles();
+    }
+
+    addChild() {
+        this.refList.push(this.vcr.createComponent(FileTablePresenterComponent));
+    }
+
+    removeChild() {
+        this.refList.pop()?.destroy();
     }
 
     button1Click() {
@@ -30,7 +42,12 @@ export class FileCollectorComponent {
 
     button3Click() {
         console.log("button3Click");
-        this._fileTablePresenterComponent.createTestTable();
+        this.addChild();
+        //this._fileTablePresenterComponent.createTestTable();
+    }
+
+    button4Click() {
+        this.ref.instance.updateTable();
     }
 
     downloadFile() {
@@ -56,9 +73,5 @@ export class FileCollectorComponent {
 
             console.log(error);
         });
-    }
-
-    createTestTable(){
-
     }
 }
