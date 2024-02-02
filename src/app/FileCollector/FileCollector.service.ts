@@ -1,6 +1,7 @@
 import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
-import {map, Observable} from "rxjs";
+import {catchError, map, Observable, throwError} from "rxjs";
+import {FileInformation} from "../DataTypes/FileInformation";
 
 @Injectable({providedIn: 'root'})
 export class FileCollectorService {
@@ -11,10 +12,24 @@ export class FileCollectorService {
         return "test";
     }
 
-    getData() {
-        this.http.get('http://localhost:12080/ping').subscribe((data) => {
-           alert(JSON.parse(JSON.stringify(data))["message"]);
-        });
+    getFileInformation(): Observable<FileInformation[]> {
+        let fileInformationList: FileInformation[] = [];
+
+        return this.http.get('http://localhost:12080/GetFileInformation').pipe(
+            map((data: any) => {
+                const jsonResponse = JSON.parse(JSON.stringify(data));
+
+                jsonResponse.forEach((item: any) => {
+                    fileInformationList.push(new FileInformation(item.filename, item.filetype, item.filesize as string));
+                });
+
+                return fileInformationList;
+            }), catchError((error: any) => {
+                alert("Connection Error!");
+
+                return throwError(() => new Error('Could not retrieve file information from server!'));
+            })
+        );
     }
 
     downloadFile(): Observable<any> {

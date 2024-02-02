@@ -1,6 +1,7 @@
 import {Component, ComponentRef, ViewChild, ViewContainerRef} from '@angular/core';
 import {FileCollectorService} from "./FileCollector.service";
 import {FileTablePresenterComponent} from "../FileTablePresenter/FileTablePresenter.component";
+import {catchError} from "rxjs";
 
 @Component({
     selector: 'FileCollector',
@@ -15,8 +16,7 @@ export class FileCollectorComponent {
     _fileTablePresenterComponent: FileTablePresenterComponent;
 
     @ViewChild("viewContainerRef", { read: ViewContainerRef }) vcr!: ViewContainerRef;
-    ref!: ComponentRef<FileTablePresenterComponent>
-    refList: ComponentRef<FileTablePresenterComponent>[] = []
+    fileInformationTableRef!: ComponentRef<FileTablePresenterComponent>
 
     constructor(fileCollectorService: FileCollectorService, FileTablePresenterComponent: FileTablePresenterComponent) {
         this._fileCollectorService = fileCollectorService;
@@ -24,16 +24,29 @@ export class FileCollectorComponent {
         this.title = fileCollectorService.collectFiles();
     }
 
-    addChild() {
-        this.refList.push(this.vcr.createComponent(FileTablePresenterComponent));
+    AddFileInformationTable(){
+        this.fileInformationTableRef = this.vcr.createComponent(FileTablePresenterComponent);
     }
 
-    removeChild() {
-        this.refList.pop()?.destroy();
+    UpdateFileInformationTable() {
+        if(this.fileInformationTableRef == null)
+            this.AddFileInformationTable();
+
+        this._fileCollectorService.getFileInformation().subscribe({
+           next: (data) => {
+               this.fileInformationTableRef.instance.updateTable(data);
+               },
+           error: (error) => {
+               new Error('Could not retrieve file information from server!');
+               },
+           complete: () => {
+               console.log("UpdateFileInformationTable complete!");
+           }
+        });
     }
 
     button1Click() {
-        this._fileCollectorService.getData();
+        console.log("Debug 1")
     }
 
     button2Click() {
@@ -41,13 +54,7 @@ export class FileCollectorComponent {
     }
 
     button3Click() {
-        console.log("button3Click");
-        this.addChild();
-        //this._fileTablePresenterComponent.createTestTable();
-    }
-
-    button4Click() {
-        this.ref.instance.updateTable();
+        this.UpdateFileInformationTable();
     }
 
     downloadFile() {

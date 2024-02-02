@@ -10,6 +10,8 @@ import {
     MatRowDef,
     MatTable
 } from "@angular/material/table";
+import {FileInformation} from "../DataTypes/FileInformation";
+import {Observable} from "rxjs";
 
 @Component({
     selector: 'file-table',
@@ -31,29 +33,44 @@ import {
 })
 
 export class FileTablePresenterComponent {
-    dataSource: any;
+    dataSource: FileInformation[];
     displayedColumns: any;
     constructor() {
-        this.dataSource = [
-            {name: 'John', age: 25, city: 'New York'},
-            {name: 'Alice', age: 30, city: 'San Francisco'},
-            {name: 'Hans', age: 35, city: 'Washington'},
-            {name: 'Peter', age: 40, city: 'Rio de Janeiro'},
-            {name: 'Walter', age: 45, city: 'Berlin'},
-            // Add more data as needed
-        ];
-
-        this.displayedColumns = ['name', 'age', 'city'];
+        this.dataSource = [];
+        this.displayedColumns = [];
     }
 
-    public updateTable(): void {
-        this.dataSource = [
-            {name: 'John2', age: 225, city: '2 New York'},
-            {name: 'Alice2', age: 230, city: '2 San Francisco'},
-            {name: 'Hans2', age: 235, city: '2 Washington'},
-            {name: 'Peter2', age: 240, city: '2 Rio de Janeiro'},
-            {name: 'Walter2', age: 245, city: '2 Berlin'},
-            // Add more data as needed
-        ];
+    public updateTable(fileInformation: FileInformation[]): void {
+        console.log(fileInformation);
+        if(fileInformation == null || fileInformation.length <= 0)
+        {
+            console.log("No data received!")
+            return;
+        }
+
+        let newDataSource: FileInformation[] = [];
+
+        fileInformation.forEach((item: FileInformation) => {
+            item.filesize = this.bytesToSuffix(item.filesize);
+            newDataSource.push(item);
+        });
+
+        this.dataSource = newDataSource;
+
+        this.displayedColumns = ['filename', 'filetype', 'filesize'];
     }
+
+    private bytesToSuffix(fileSizeAsString: string): string {
+
+        let splitString = fileSizeAsString.split(".");
+
+        const sizeUnits = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+        let prefix = splitString[0];
+        let prefix2 = splitString[1];
+        let suffix = sizeUnits[splitString.length - 1];
+
+        console.log(splitString)
+
+        return `${prefix}.${prefix2} ${suffix}`};
 }
