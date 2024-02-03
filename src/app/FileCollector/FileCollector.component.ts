@@ -59,26 +59,29 @@ export class FileCollectorComponent {
 
     downloadFile() {
 
-        //calling service
-        this._fileCollectorService.downloadFile().subscribe(response => {
-
-            console.log(response);
-            var binaryData = [];
-            binaryData.push(response.data);
-            var url = window.URL.createObjectURL(new Blob(binaryData, {type: "application/rar"}));
-            var a = document.createElement('a');
-            document.body.appendChild(a);
-            a.setAttribute('style', 'display: none');
-            a.setAttribute('target', 'blank');
-            a.href = url;
-            a.download = response.filename;
-            a.click();
-            window.URL.revokeObjectURL(url);
-            a.remove();
-
-        }, error => {
-
-            console.log(error);
-        });
+        // This is a simple example of how to download a file from the server.
+        this._fileCollectorService.downloadFile().subscribe({
+            next: (data) => {
+                console.log(data);
+                var binaryData = [];
+                binaryData.push(data.data);
+                var url = window.URL.createObjectURL(new Blob(binaryData, {type: "application/rar"}));
+                var a = document.createElement('a');
+                document.body.appendChild(a);
+                a.setAttribute('style', 'display: none');
+                a.setAttribute('target', 'blank');
+                a.href = url;
+                a.download = data.filename;
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+            },
+            error: (error) => {
+                console.log("Error: " + error);
+            },
+            complete: () => {
+                console.log("Download complete!");
+            }
+        })
     }
 }
