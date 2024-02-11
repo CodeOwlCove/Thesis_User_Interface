@@ -1,12 +1,16 @@
-import {Component, ComponentRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component, ComponentRef, ElementRef, ViewChild, ViewContainerRef} from '@angular/core';
 import {FileCollectorService} from "./FileCollector.service";
 import {FileTablePresenterComponent} from "../FileTablePresenter/FileTablePresenter.component";
 import {catchError} from "rxjs";
+import {NgClass} from "@angular/common";
 
 @Component({
     selector: 'FileCollector',
     standalone: true,
     templateUrl: './FileCollector.component.html',
+    imports: [
+        NgClass
+    ],
     styleUrl: './FileCollector.component.css'
 })
 
@@ -17,6 +21,9 @@ export class FileCollectorComponent {
 
     @ViewChild("viewContainerRef", { read: ViewContainerRef }) vcr!: ViewContainerRef;
     fileInformationTableRef!: ComponentRef<FileTablePresenterComponent>
+
+    // Add a boolean property to track download operation status
+    isDownloading: boolean = false;
 
     constructor(fileCollectorService: FileCollectorService, FileTablePresenterComponent: FileTablePresenterComponent) {
         this._fileCollectorService = fileCollectorService;
@@ -50,6 +57,7 @@ export class FileCollectorComponent {
     }
 
     button2Click() {
+        this.isDownloading = true;
         this.downloadFile();
     }
 
@@ -81,6 +89,7 @@ export class FileCollectorComponent {
             },
             complete: () => {
                 console.log("Download complete!");
+                this.isDownloading = false;
             }
         })
     }

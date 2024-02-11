@@ -10,7 +10,7 @@
 
 <div>
     <button id="GatherFileNames" (click)="button1Click()">Debug1</button>
-    <button id="DownloadAllFiles" (click)="button2Click()">Download All Files</button>
+    <button id="DownloadAllFiles" (click)="button2Click()" [disabled]="isDownloading" [ngClass]="{'disabled-button': isDownloading}">Download All Files</button>
     <button id="DownloadSelectedFiles" (click)="button3Click()">Collect File Information</button>
 </div>
 

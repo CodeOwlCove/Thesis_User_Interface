@@ -1,0 +1,5 @@
+.disabled-button {
+    opacity: 0.5; /* Change opacity to give a greyed-out effect */
+    cursor: not-allowed; /* Change cursor to not-allowed to indicate disabled state */
+    /* You can add more styles to customize the appearance further */
+}
