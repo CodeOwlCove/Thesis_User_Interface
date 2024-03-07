@@ -3,6 +3,7 @@ import {FileCollectorService} from "./FileCollector.service";
 import {FileTablePresenterComponent} from "../FileTablePresenter/FileTablePresenter.component";
 import {catchError} from "rxjs";
 import {NgClass} from "@angular/common";
+import {FileInformation} from "../DataTypes/FileInformation";
 
 @Component({
     selector: 'FileCollector',
@@ -52,23 +53,62 @@ export class FileCollectorComponent {
         });
     }
 
+    public GetSelectedFileNames(): string[]{
+        let selectedFileNames: string[] = [];
+        this.fileInformationTableRef.instance.selection.selected.forEach((row) => {
+            row = row as FileInformation;
+            selectedFileNames.push(row.filename);
+        });
+        return selectedFileNames;
+    }
+
     button1Click() {
         console.log("Debug 1")
     }
 
     button2Click() {
         this.isDownloading = true;
-        this.downloadFile();
+        this.downloadAllFiles();
     }
 
     button3Click() {
         this.UpdateFileInformationTable();
     }
 
-    downloadFile() {
+    button4Click(){
+        console.log("Downloading selected files!");
+        this.downloadSelectedFiles(this.GetSelectedFileNames());
+    }
+
+    downloadSelectedFiles(selectedFileNames: string[]) {
+        // This is a simple example of how to download a file from the server.
+        this._fileCollectorService.downloadSelectedFiles(selectedFileNames).subscribe({
+            next: (data: Blob) => {
+                console.log(data);
+                var url = window.URL.createObjectURL(data);
+                var a = document.createElement('a');
+                document.body.appendChild(a);
+                a.setAttribute('style', 'display: none');
+                a.href = url;
+                a.download = 'Incomming.rar'; // Use a fixed filename or get it from the server response
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+            },
+            error: (error) => {
+                console.log("Error: " + error);
+            },
+            complete: () => {
+                console.log("Download complete!");
+                this.isDownloading = false;
+            }
+        });
+    }
+
+    downloadAllFiles() {
 
         // This is a simple example of how to download a file from the server.
-        this._fileCollectorService.downloadFile().subscribe({
+        this._fileCollectorService.downloadAllFiles().subscribe({
             next: (data) => {
                 console.log(data);
                 var binaryData = [];

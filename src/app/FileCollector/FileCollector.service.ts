@@ -1,4 +1,4 @@
-import {HttpClient} from "@angular/common/http";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {Injectable} from "@angular/core";
 import {catchError, map, Observable, throwError} from "rxjs";
 import {FileInformation} from "../DataTypes/FileInformation";
@@ -32,12 +32,22 @@ export class FileCollectorService {
         );
     }
 
-    downloadFile(): Observable<any> {
-        return this.http.get("http://localhost:12080/GetFilesFrontend", { responseType: 'blob' }).pipe(map((response)=>{
+    downloadAllFiles(): Observable<any> {
+        return this.http.get("http://localhost:12080/GetAllFilesFrontend", { responseType: 'blob' }).pipe(map((response)=>{
             return {
                 filename: 'Incomming.rar',
                 data: response
             };
         }));
+    }
+
+    downloadSelectedFiles(selectedFileNames: string[]) {
+        console.log("Request Files: " + selectedFileNames);
+        const headers = new HttpHeaders().set('Content-Type', 'application/json');
+        return this.http.post(
+            'http://localhost:12080/GetSelectedFilesFrontend',
+            { selectedFiles: selectedFileNames },
+            { headers: headers, responseType: 'blob' }
+        );
     }
 }
