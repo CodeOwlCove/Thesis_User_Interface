@@ -72,18 +72,14 @@ export class FileTablePresenterComponent {
     }
 
     private bytesToSuffix(fileSizeAsString: string): string {
-
         let splitString = fileSizeAsString.split(".");
-
         const sizeUnits = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
         let prefix = splitString[0];
-        let prefix2 = splitString[1];
+        let prefix2 = splitString[1] ? splitString[1] : '0';
         let suffix = sizeUnits[splitString.length - 1];
 
-        console.log(splitString)
-
-        return `${prefix}.${prefix2} ${suffix}`
+        return `${prefix}.${prefix2} ${suffix}`;
     }
 
     // Check if all rows are selected

@@ -11,8 +11,17 @@
 <div>
     <button id="GatherFileNames" (click)="button1Click()">Debug1</button>
     <button id="DownloadAllFiles" (click)="button2Click()" [disabled]="isDownloading" [ngClass]="{'disabled-button': isDownloading}">Download All Files</button>
-    <button id="CollectFileInformation" (click)="button3Click()">Collect File Information</button>
-    <button id="DownloadSelected Files" (click)="button4Click()">Download Selected Files</button>
+    <button id="CollectFileInformation" (click)="button3Click()" [disabled]="isDownloading">Collect File Information</button>
+    <button id="DownloadSelected Files" (click)="button4Click()" [disabled]="isDownloading">Download Selected Files</button>
+</div>
+
+<div class="overlay" *ngIf="isPopupVisible"></div>
+
+<div class="popup" *ngIf="isPopupVisible">
+    <div>
+        <img class="popup-img" ngSrc="../../assets/Loading_Gif.gif" alt="Loading..." fill/>
+        <p>Preparing your Download... Please Wait...</p>
+    </div>
 </div>
 
 <ng-template #viewContainerRef></ng-template>

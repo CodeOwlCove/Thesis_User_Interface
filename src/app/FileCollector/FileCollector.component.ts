@@ -1,8 +1,8 @@
-import {Component, ComponentRef, ElementRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component, ComponentRef, ElementRef, OnDestroy, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {FileCollectorService} from "./FileCollector.service";
 import {FileTablePresenterComponent} from "../FileTablePresenter/FileTablePresenter.component";
 import {catchError} from "rxjs";
-import {NgClass} from "@angular/common";
+import {NgClass, NgIf, NgOptimizedImage} from "@angular/common";
 import {FileInformation} from "../DataTypes/FileInformation";
 
 @Component({
@@ -10,12 +10,14 @@ import {FileInformation} from "../DataTypes/FileInformation";
     standalone: true,
     templateUrl: './FileCollector.component.html',
     imports: [
-        NgClass
+        NgClass,
+        NgIf,
+        NgOptimizedImage
     ],
     styleUrl: './FileCollector.component.css'
 })
 
-export class FileCollectorComponent {
+export class FileCollectorComponent implements OnInit, OnDestroy{
     title: string = 'FileCollector';
     _fileCollectorService: FileCollectorService;
     _fileTablePresenterComponent: FileTablePresenterComponent;
@@ -25,11 +27,27 @@ export class FileCollectorComponent {
 
     // Add a boolean property to track download operation status
     isDownloading: boolean = false;
+    isPopupVisible: boolean = false;
+
+    intervalId: any;
+
+    startTime : any;
+    endTime : any;
 
     constructor(fileCollectorService: FileCollectorService, FileTablePresenterComponent: FileTablePresenterComponent) {
         this._fileCollectorService = fileCollectorService;
         this._fileTablePresenterComponent = FileTablePresenterComponent;
         this.title = fileCollectorService.collectFiles();
+    }
+
+    ngOnInit() {
+        //this.intervalId = setInterval(() => this.button3Click(), 1000);
+    }
+
+    ngOnDestroy(){
+        if(this.intervalId){
+            clearInterval(this.intervalId);
+        }
     }
 
     AddFileInformationTable(){
@@ -49,6 +67,8 @@ export class FileCollectorComponent {
                },
            complete: () => {
                console.log("UpdateFileInformationTable complete!");
+
+               this.stopPerformanceTest();
            }
         });
     }
@@ -63,19 +83,23 @@ export class FileCollectorComponent {
     }
 
     button1Click() {
+        this.togglePopup();
         console.log("Debug 1")
     }
 
     button2Click() {
+        this.startPerformanceTest();
         this.isDownloading = true;
         this.downloadAllFiles();
     }
 
     button3Click() {
+        this.startPerformanceTest();
         this.UpdateFileInformationTable();
     }
 
     button4Click(){
+        this.startPerformanceTest();
         console.log("Downloading selected files!");
         this.downloadSelectedFiles(this.GetSelectedFileNames());
     }
@@ -101,6 +125,8 @@ export class FileCollectorComponent {
             complete: () => {
                 console.log("Download complete!");
                 this.isDownloading = false;
+
+                this.stopPerformanceTest();
             }
         });
     }
@@ -130,7 +156,28 @@ export class FileCollectorComponent {
             complete: () => {
                 console.log("Download complete!");
                 this.isDownloading = false;
+
+                this.stopPerformanceTest();
             }
         })
+    }
+
+    startPerformanceTest(){
+        this.isDownloading = true;
+        this.isPopupVisible = true;
+        this.startTime = performance.now();
+    }
+
+    stopPerformanceTest(){
+        this.endTime = performance.now();
+
+        this.isDownloading = false;
+        this.isPopupVisible = false;
+
+        console.log(`Process took ${(this.endTime - this.startTime) / 1000} seconds.`);
+    }
+
+    togglePopup(){
+        this.isPopupVisible = !this.isPopupVisible;
     }
 }
