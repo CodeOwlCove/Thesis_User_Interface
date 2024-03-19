@@ -8,12 +8,25 @@
 
 <h3>{{ title }}</h3>
 
-<div>
-    <button id="GatherFileNames" (click)="button1Click()">Debug1</button>
-    <button id="DownloadAllFiles" (click)="button2Click()" [disabled]="isDownloading" [ngClass]="{'disabled-button': isDownloading}">Download All Files</button>
-    <button id="CollectFileInformation" (click)="button3Click()" [disabled]="isDownloading">Collect File Information</button>
-    <button id="DownloadSelected Files" (click)="button4Click()" [disabled]="isDownloading">Download Selected Files</button>
+<div class="popup2" *ngIf="isInitialPopupVisible">
+    <div>
+        <h2>Terms and Conditions</h2>
+        <p>By initiating the download of any file from this system, you are explicitly consenting to the terms outlined in the accompanying legal documents. Please be advised that your action constitutes acceptance of the contractual agreements associated with the downloaded files and acknowledgment of any legal ramifications therein.</p>
+        <label for="termsCheckbox" id="termsCheckboxText">By checking this checkbox, I agree to these terms and conditions.</label>
+        <input type="checkbox" [(ngModel)]="isCheckboxChecked" id="termsCheckbox">
+        <button (click)="closeInitialPopup()" [disabled]="!isCheckboxChecked">Proceed</button>
+    </div>
 </div>
+
+
+<div>
+    <button id="CollectFileInformation" (click)="button3Click()" [disabled]="isDownloading" [ngClass]="{'disabled-button': isDownloading}">Collect File Information</button>
+</div>
+<div>
+    <button id="DownloadAllFiles" (click)="button2Click()" [disabled]="isDownloading" [ngClass]="{'disabled-button': isDownloading}">Download All Files</button>
+    <button id="DownloadSelected Files" (click)="button4Click()" [disabled]="isDownloading" [ngClass]="{'disabled-button': isDownloading}">Download Selected Files</button>
+</div>
+
 
 <div class="overlay" *ngIf="isPopupVisible"></div>
 

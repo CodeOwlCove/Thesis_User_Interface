@@ -54,3 +54,52 @@ button:hover {
     background-color: #00c4b4;
     color: white;
 }
+
+.popup2 {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    padding: 20px;
+    background-color: rgb(25, 25, 25, 0.8);
+    border-radius: 10px;
+    border: 5px solid red;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    color:white;
+    width: 800px;
+    height: 600px;
+}
+
+.popup2 div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup2 p {
+    text-align:center;
+    font-size: 22px;
+    margin-top: 80px;
+    margin-left: 100px;
+    margin-right: 100px;
+    margin-bottom: 80px;
+}
+
+.popup2 input[type="checkbox"] {
+    width: 30px;
+    height: 30px;
+}
+
+.popup2 button {
+    margin-top: 80px;
+}
+
+#termsCheckboxText{
+    text-align: center;
+    text-decoration: underline;
+    font-size: 22px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

@@ -8,9 +8,7 @@ export class FileCollectorService {
 
     constructor(private http: HttpClient) { }
 
-    collectFiles(): string {
-        return "test";
-    }
+
 
     getFileInformation(): Observable<FileInformation[]> {
         let fileInformationList: FileInformation[] = [];

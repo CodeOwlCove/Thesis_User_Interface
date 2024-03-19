@@ -4,6 +4,7 @@ import {FileTablePresenterComponent} from "../FileTablePresenter/FileTablePresen
 import {catchError} from "rxjs";
 import {NgClass, NgIf, NgOptimizedImage} from "@angular/common";
 import {FileInformation} from "../DataTypes/FileInformation";
+import {FormsModule} from "@angular/forms";
 
 @Component({
     selector: 'FileCollector',
@@ -12,7 +13,8 @@ import {FileInformation} from "../DataTypes/FileInformation";
     imports: [
         NgClass,
         NgIf,
-        NgOptimizedImage
+        NgOptimizedImage,
+        FormsModule
     ],
     styleUrl: './FileCollector.component.css'
 })
@@ -26,7 +28,7 @@ export class FileCollectorComponent implements OnInit, OnDestroy{
     fileInformationTableRef!: ComponentRef<FileTablePresenterComponent>
 
     // Add a boolean property to track download operation status
-    isDownloading: boolean = false;
+    isDownloading: boolean = true;
     isPopupVisible: boolean = false;
 
     intervalId: any;
@@ -34,10 +36,12 @@ export class FileCollectorComponent implements OnInit, OnDestroy{
     startTime : any;
     endTime : any;
 
+    isInitialPopupVisible: boolean = true;
+    isCheckboxChecked: boolean = false;
+
     constructor(fileCollectorService: FileCollectorService, FileTablePresenterComponent: FileTablePresenterComponent) {
         this._fileCollectorService = fileCollectorService;
         this._fileTablePresenterComponent = FileTablePresenterComponent;
-        this.title = fileCollectorService.collectFiles();
     }
 
     ngOnInit() {
@@ -48,6 +52,11 @@ export class FileCollectorComponent implements OnInit, OnDestroy{
         if(this.intervalId){
             clearInterval(this.intervalId);
         }
+    }
+
+    closeInitialPopup(){
+        this.isInitialPopupVisible = false;
+        this.isDownloading = false;
     }
 
     AddFileInformationTable(){
